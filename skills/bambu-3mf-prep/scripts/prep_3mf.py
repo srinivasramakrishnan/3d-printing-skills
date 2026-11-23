@@ -350,6 +350,12 @@ def patch_3mf_project_settings(
                             cfg[keep_key] = source_cfg[keep_key]
                     if support_mode == "on":
                         cfg["enable_support"] = "1"
+                    elif support_mode == "critical":
+                        cfg["enable_support"] = "1"
+                        cfg["support_type"] = "tree(auto)"
+                        cfg["support_on_build_plate_only"] = "1"
+                        cfg["support_critical_regions_only"] = "1"
+                        cfg["support_threshold_angle"] = "30"
                     elif support_mode == "off":
                         cfg["enable_support"] = "0"
                     elif "enable_support" in source_cfg:
@@ -603,7 +609,7 @@ def main() -> int:
     p_prep.add_argument("--out", help="Output .3mf path (default: <stem>_x2d_ready.3mf)")
     p_prep.add_argument("--process", help="Override X2D process preset name (e.g. '0.16mm High Quality @BBL X2D')")
     p_prep.add_argument("--bed", help="Override build plate (default: Textured PEI Plate)")
-    p_prep.add_argument("--support", choices=["keep", "on", "off"], default="keep", help="Support setting policy")
+    p_prep.add_argument("--support", choices=["keep", "on", "critical", "off"], default="keep", help="Support setting policy ('critical' = tree auto, build-plate only, critical regions only)")
     p_prep.add_argument("--use-inventory-colors", action="store_true", help="Replace 3MF hex colors with matched inventory hex colors")
     p_prep.add_argument("--no-slice", action="store_true", help="Skip headless Bambu Studio slice validation")
 

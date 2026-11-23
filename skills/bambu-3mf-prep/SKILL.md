@@ -29,7 +29,7 @@ Use this skill whenever the user has a `.3mf` file to prepare for their **Bambu 
    Optional flags:
    - `--process "<preset>"` — override process preset (e.g. `"0.12mm High Quality @BBL X2D"`, `"0.20mm Standard @BBL X2D"`). By default, maps the source file's layer height to the matching X2D preset.
    - `--bed "<plate>"` — override build plate (default: `Textured PEI Plate`).
-   - `--support keep|on|off` — keep author's support setting (default) or force supports on/off.
+   - `--support keep|on|critical|off` — keep author's support setting (default), force supports on/off, or use `critical` (`tree(auto)` + `on build plate only` + `critical regions only`) to fix floating-region warnings on articulated models without fusing joints.
    - `--use-inventory-colors` — replace 3MF hex colors with exact hex codes from `filament_inventory.json`.
    - `--no-slice` — skip headless Bambu Studio slice validation for a fast dry-run.
 
