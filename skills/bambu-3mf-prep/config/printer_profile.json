@@ -1,0 +1,40 @@
+{
+  "printer_name": "Bambu Lab X2D",
+  "printer_settings_id": "Bambu Lab X2D 0.4 nozzle",
+  "machine_preset_file": "Bambu Lab X2D 0.4 nozzle.json",
+  "default_process_preset": "0.16mm High Quality @BBL X2D",
+  "layer_height_to_process": {
+    "0.08": "0.08mm High Quality @BBL X2D",
+    "0.12": "0.12mm High Quality @BBL X2D",
+    "0.16": "0.16mm High Quality @BBL X2D",
+    "0.20": "0.20mm Standard @BBL X2D",
+    "0.24": "0.24mm Standard @BBL X2D"
+  },
+  "default_bed_type": "Textured PEI Plate",
+  "nozzles": {
+    "main": {
+      "index": 0,
+      "diameter": 0.4,
+      "flow": "Standard",
+      "ams_installed": true,
+      "ams_slots": 4
+    },
+    "auxiliary": {
+      "index": 1,
+      "diameter": 0.4,
+      "flow": "Standard",
+      "ams_installed": false,
+      "ams_slots": 1
+    }
+  },
+  "extruder_ams_count": ["1#0|4#1", "1#0|4#0"],
+  "build_volume_mm": {
+    "x": 256,
+    "y": 256,
+    "z": 261
+  },
+  "bambu_studio_bin": "/Applications/BambuStudio.app/Contents/MacOS/BambuStudio",
+  "bambu_profiles_dir": "/Applications/BambuStudio.app/Contents/Resources/profiles/BBL",
+  "default_filament_preset": "Bambu PLA Basic @BBL X2D 0.4 nozzle",
+  "output_suffix": "_x2d_ready"
+}

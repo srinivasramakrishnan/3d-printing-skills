@@ -1,0 +1,62 @@
+{
+  "notes": "Seeded from colors seen in your existing X2D prints. Tell the agent your actual spools and current AMS/Aux slots to keep this up to date.",
+  "loaded": {
+    "ams_1": null,
+    "ams_2": null,
+    "ams_3": null,
+    "ams_4": null,
+    "aux_nozzle": null
+  },
+  "spools": [
+    {
+      "id": "bambu-pla-basic-black",
+      "brand": "Bambu Lab",
+      "material": "PLA",
+      "finish": "Basic",
+      "color_name": "Black",
+      "hex": "#161616",
+      "preset": "Bambu PLA Basic @BBL X2D 0.4 nozzle",
+      "status": "unconfirmed"
+    },
+    {
+      "id": "bambu-pla-basic-white",
+      "brand": "Bambu Lab",
+      "material": "PLA",
+      "finish": "Basic",
+      "color_name": "Jade White",
+      "hex": "#FFFFFF",
+      "preset": "Bambu PLA Basic @BBL X2D 0.4 nozzle",
+      "status": "unconfirmed"
+    },
+    {
+      "id": "bambu-pla-basic-green",
+      "brand": "Bambu Lab",
+      "material": "PLA",
+      "finish": "Basic",
+      "color_name": "Bambu Green",
+      "hex": "#00AE42",
+      "preset": "Bambu PLA Basic @BBL X2D 0.4 nozzle",
+      "status": "unconfirmed"
+    },
+    {
+      "id": "bambu-pla-matte-scarlet-red",
+      "brand": "Bambu Lab",
+      "material": "PLA",
+      "finish": "Matte",
+      "color_name": "Scarlet Red",
+      "hex": "#BB3D43",
+      "preset": "Bambu PLA Matte @BBL X2D 0.4 nozzle",
+      "status": "unconfirmed"
+    },
+    {
+      "id": "bambu-pla-matte-lemon-yellow",
+      "brand": "Bambu Lab",
+      "material": "PLA",
+      "finish": "Matte",
+      "color_name": "Lemon Yellow",
+      "hex": "#F7D959",
+      "preset": "Bambu PLA Matte @BBL X2D 0.4 nozzle",
+      "status": "unconfirmed"
+    }
+  ]
+}
