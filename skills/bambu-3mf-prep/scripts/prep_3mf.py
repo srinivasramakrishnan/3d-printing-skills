@@ -13,6 +13,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import colorsys
 import json
 import math
 import os
@@ -51,16 +52,27 @@ def hex_to_rgb(h: str) -> tuple[int, int, int]:
 
 
 def color_distance(h1: str, h2: str) -> float:
-    """Weighted perceptual RGB distance (redmean approximation, 0..765)."""
+    """Hue-aware perceptual color distance (0..1000). Prevents matching chromatic colors to grays."""
     r1, g1, b1 = hex_to_rgb(h1)
     r2, g2, b2 = hex_to_rgb(h2)
     rmean = (r1 + r2) / 2.0
     dr, dg, db = r1 - r2, g1 - g2, b1 - b2
-    return math.sqrt(
+    rgb_dist = math.sqrt(
         (2 + rmean / 256.0) * dr * dr
         + 4 * dg * dg
         + (2 + (255 - rmean) / 256.0) * db * db
     )
+    hue1, sat1, val1 = colorsys.rgb_to_hsv(r1 / 255.0, g1 / 255.0, b1 / 255.0)
+    hue2, sat2, val2 = colorsys.rgb_to_hsv(r2 / 255.0, g2 / 255.0, b2 / 255.0)
+    # Neutral vs chromatic mismatch penalty
+    is_neutral1 = sat1 < 0.15 or val1 < 0.12
+    is_neutral2 = sat2 < 0.15 or val2 < 0.12
+    if is_neutral1 != is_neutral2:
+        rgb_dist += 220.0
+    elif not is_neutral1 and not is_neutral2:
+        dh = min(abs(hue1 - hue2), 1.0 - abs(hue1 - hue2))
+        rgb_dist += dh * 400.0
+    return rgb_dist
 
 
 def match_inventory(hex_color: str, material: str, inventory: dict) -> dict | None:
@@ -71,22 +83,30 @@ def match_inventory(hex_color: str, material: str, inventory: dict) -> dict | No
     spool_to_slot = {v: k for k, v in loaded.items() if v}
 
     best = None
-    best_dist = 1e9
+    best_score = 1e9
+    best_raw_dist = 1e9
     for sp in spools:
         d = color_distance(hex_color, sp.get("hex", "#FFFFFF"))
+        score = d
         # Slight penalty if material doesn't match (e.g. PLA vs PETG)
         if material and sp.get("material", "").upper() != material.upper():
-            d += 120.0
-        if d < best_dist:
-            best_dist = d
+            score += 120.0
+        # Prefer spools currently on hand over in-transit or unconfirmed spools
+        if sp.get("status") == "in_transit":
+            score += 80.0
+        elif sp.get("status") == "unconfirmed":
+            score += 40.0
+        if score < best_score:
+            best_score = score
+            best_raw_dist = d
             best = sp
 
     if best is None:
         return None
-    quality = "exact" if best_dist < 35 else ("close" if best_dist < 110 else "distant")
+    quality = "exact" if best_raw_dist < 45 else ("close" if best_raw_dist < 130 else "distant")
     return {
         "spool": best,
-        "distance": round(best_dist, 1),
+        "distance": round(best_raw_dist, 1),
         "match_quality": quality,
         "loaded_slot": spool_to_slot.get(best["id"]),
     }
@@ -118,7 +138,7 @@ def resolve_filament_preset_file(
     fil_dir = Path(profile["bambu_profiles_dir"]) / "filament"
     candidates = []
 
-    if matched_spool and matched_spool.get("status") != "unconfirmed" and matched_spool.get("preset"):
+    if matched_spool and matched_spool.get("status") == "owned" and matched_spool.get("preset"):
         candidates.append(matched_spool["preset"])
 
     # Convert e.g. 'Bambu PLA Matte @BBL A1' -> 'Bambu PLA Matte @BBL X2D 0.4 nozzle'
@@ -469,7 +489,7 @@ def print_report(inspection: dict, prep_meta: dict | None = None, slice_res: dic
         if m:
             sp = m["spool"]
             slot_str = f"LOADED in {m['loaded_slot']}" if m["loaded_slot"] else "not loaded"
-            status_tag = " [unconfirmed]" if sp.get("status") == "unconfirmed" else ""
+            status_tag = f" [{sp['status']}]" if sp.get("status") and sp.get("status") != "owned" else ""
             match_str = f"-> {sp['brand']} {sp['material']} {sp['finish']} '{sp['color_name']}' ({sp['hex']}, {m['match_quality']}, {slot_str}){status_tag}"
         else:
             match_str = "-> NO INVENTORY MATCH"
