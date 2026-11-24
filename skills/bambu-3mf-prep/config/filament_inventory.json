@@ -1,11 +1,11 @@
 {
   "notes": "Updated Nov 23, 2026 from Best Buy, Target, and Bambu Lab orders.",
   "loaded": {
-    "ams_1": null,
-    "ams_2": null,
-    "ams_3": null,
-    "ams_4": null,
-    "aux_nozzle": null
+    "ams_1": "bambu-pla-basic-jade-white",
+    "ams_2": "bambu-pla-basic-purple",
+    "ams_3": "bambu-pla-basic-black",
+    "ams_4": "bambu-pla-basic-magenta",
+    "aux_nozzle": "bambu-pla-basic-bambu-green"
   },
   "pending_color_details": [
     {
@@ -128,6 +128,19 @@
       "sku": "10402",
       "color_name": "Sunflower Yellow",
       "hex": "#FEC600",
+      "preset": "Bambu PLA Basic @BBL X2D 0.4 nozzle",
+      "qty_spool": 1,
+      "qty_refill": 0,
+      "status": "owned"
+    },
+    {
+      "id": "bambu-pla-basic-purple",
+      "brand": "Bambu Lab",
+      "material": "PLA",
+      "finish": "Basic",
+      "sku": "10700",
+      "color_name": "Purple",
+      "hex": "#5E43B7",
       "preset": "Bambu PLA Basic @BBL X2D 0.4 nozzle",
       "qty_spool": 1,
       "qty_refill": 0,
