@@ -17,7 +17,7 @@ Use this skill whenever the user has a `.3mf` file to prepare for their **Bambu 
 ## Configuration Files
 
 - Printer hardware & defaults: [printer_profile.json](./config/printer_profile.json)
-- Filament spool inventory & currently loaded AMS/Aux slots: [filament_inventory.json](./config/filament_inventory.json)
+- Personal filament spool inventory & loaded AMS/Aux slots: stored **outside the skill** at `<workspace>/config/filament_inventory.json` (or `~/.config/bambu-3mf-prep/filament_inventory.json`, or via `BAMBU_FILAMENT_INVENTORY` / `--inventory`). See [filament_inventory.example.json](./config/filament_inventory.example.json) for the schema.
 - Main automation script: [prep_3mf.py](./scripts/prep_3mf.py)
 
 ## Workflow: Preparing a Downloaded 3MF
@@ -53,7 +53,7 @@ Use this skill whenever the user has a `.3mf` file to prepare for their **Bambu 
   ```bash
   python3 .agents/skills/bambu-3mf-prep/scripts/prep_3mf.py inventory list
   ```
-- When the user tells you what spools they own, what they bought, or what is currently loaded in `ams_1..4` and `aux_nozzle`, edit [filament_inventory.json](./config/filament_inventory.json) directly:
+- When the user tells you what spools they own, what they bought, or what is currently loaded in `ams_1..4` and `aux_nozzle`, edit `<workspace>/config/filament_inventory.json` directly (create it from [filament_inventory.example.json](./config/filament_inventory.example.json) if it does not exist yet — never store personal inventory inside `.agents/skills/`):
   - Set `"status": "owned"` for confirmed spools.
   - Set `"loaded"` keys (`ams_1`, `ams_2`, `ams_3`, `ams_4`, `aux_nozzle`) to the matching spool `id` (or `null` if empty).
   - Match `"preset"` to an exact filename (without `.json`) from `/Applications/BambuStudio.app/Contents/Resources/profiles/BBL/filament/` (e.g., `Bambu PLA Basic @BBL X2D 0.4 nozzle`, `Bambu PLA Matte @BBL X2D 0.4 nozzle`, `Bambu PLA Silk+ @BBL X2D 0.4 nozzle`, `Generic PLA @BBL X2D 0.4 nozzle`).

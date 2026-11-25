@@ -1,0 +1,38 @@
+{
+  "notes": "Example filament inventory template. Copy to <workspace>/config/filament_inventory.json (or ~/.config/bambu-3mf-prep/filament_inventory.json) and customize with your own spools and loaded AMS/Aux slots.",
+  "loaded": {
+    "ams_1": "bambu-pla-basic-jade-white",
+    "ams_2": "bambu-pla-basic-black",
+    "ams_3": null,
+    "ams_4": null,
+    "aux_nozzle": null
+  },
+  "spools": [
+    {
+      "id": "bambu-pla-basic-black",
+      "brand": "Bambu Lab",
+      "material": "PLA",
+      "finish": "Basic",
+      "sku": "10101",
+      "color_name": "Black",
+      "hex": "#000000",
+      "preset": "Bambu PLA Basic @BBL X2D 0.4 nozzle",
+      "qty_spool": 1,
+      "qty_refill": 0,
+      "status": "owned"
+    },
+    {
+      "id": "bambu-pla-basic-jade-white",
+      "brand": "Bambu Lab",
+      "material": "PLA",
+      "finish": "Basic",
+      "sku": "10100",
+      "color_name": "Jade White",
+      "hex": "#FFFFFF",
+      "preset": "Bambu PLA Basic @BBL X2D 0.4 nozzle",
+      "qty_spool": 1,
+      "qty_refill": 0,
+      "status": "owned"
+    }
+  ]
+}

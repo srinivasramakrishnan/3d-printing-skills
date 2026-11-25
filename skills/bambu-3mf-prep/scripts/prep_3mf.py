@@ -29,7 +29,30 @@ from pathlib import Path
 
 SKILL_DIR = Path(__file__).resolve().parent.parent
 PRINTER_PROFILE_PATH = SKILL_DIR / "config" / "printer_profile.json"
-INVENTORY_PATH = SKILL_DIR / "config" / "filament_inventory.json"
+DEFAULT_EXAMPLE_INVENTORY_PATH = SKILL_DIR / "config" / "filament_inventory.example.json"
+
+
+def resolve_inventory_path(explicit: str | None = None) -> Path:
+    """Locate the user's filament inventory outside the skill directory first."""
+    candidates: list[Path] = []
+    if explicit:
+        return Path(explicit).expanduser().resolve()
+    env_path = os.environ.get("BAMBU_FILAMENT_INVENTORY")
+    if env_path:
+        candidates.append(Path(env_path).expanduser().resolve())
+    # Workspace-level config/ relative to CWD or workspace root (.agents/skills/<skill>)
+    candidates.append(Path.cwd() / "config" / "filament_inventory.json")
+    candidates.append(SKILL_DIR.parent.parent.parent / "config" / "filament_inventory.json")
+    # User-level config directory
+    candidates.append(Path.home() / ".config" / "bambu-3mf-prep" / "filament_inventory.json")
+    # Legacy in-skill path, then example template
+    candidates.append(SKILL_DIR / "config" / "filament_inventory.json")
+    candidates.append(DEFAULT_EXAMPLE_INVENTORY_PATH)
+
+    for p in candidates:
+        if p.exists():
+            return p
+    return DEFAULT_EXAMPLE_INVENTORY_PATH
 
 
 def load_json(path: Path) -> dict:
@@ -604,8 +627,9 @@ def cmd_prep(args, profile: dict, inventory: dict) -> int:
     return 0
 
 
-def cmd_inventory(args, inventory: dict) -> int:
+def cmd_inventory(args, inventory: dict, inventory_path: Path) -> int:
     if args.inv_action == "list":
+        print(f"Inventory file: {inventory_path}\n")
         loaded = inventory.get("loaded", {})
         print("=== CURRENTLY LOADED ===")
         for slot, sid in loaded.items():
@@ -619,6 +643,7 @@ def cmd_inventory(args, inventory: dict) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Bambu Lab X2D 3MF Prep & Validation Tool")
+    parser.add_argument("--inventory", help="Path to filament_inventory.json (defaults to workspace config/filament_inventory.json)")
     sub = parser.add_subparsers(dest="command", required=True)
 
     p_ins = sub.add_parser("inspect", help="Inspect a 3MF without modifying it")
@@ -638,7 +663,8 @@ def main() -> int:
 
     args = parser.parse_args()
     profile = load_json(PRINTER_PROFILE_PATH)
-    inventory = load_json(INVENTORY_PATH)
+    inventory_path = resolve_inventory_path(args.inventory)
+    inventory = load_json(inventory_path)
 
     if args.command == "inspect":
         info = inspect_3mf(Path(args.input).resolve(), profile, inventory)
@@ -647,7 +673,7 @@ def main() -> int:
     if args.command == "prep":
         return cmd_prep(args, profile, inventory)
     if args.command == "inventory":
-        return cmd_inventory(args, inventory)
+        return cmd_inventory(args, inventory, inventory_path)
     return 1
 
 
